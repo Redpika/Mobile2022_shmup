@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ShmupProject</string>
+    <string name="simple_shmup">Simple Shmup</string>
+    <string name="start">Start</string>
+    <string name="high_score">High score :</string>
+    <string name="score">Score:</string>
+    <string name="game_over">Game Over!</string>
+    <string name="exit">EXIT</string>
+</resources>
