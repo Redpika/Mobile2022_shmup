@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
+import android.util.Half.toFloat
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -94,8 +95,6 @@ class GameActivity : AppCompatActivity() {
         mainLayout = findViewById(R.id.game_layout)
         scoreGame = findViewById(R.id.score_game)
 
-        scoreGame.text = "Score: $score"
-
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         screenHeight = displayMetrics.heightPixels
@@ -104,7 +103,9 @@ class GameActivity : AppCompatActivity() {
         enemyShipSpeed = (screenHeight / 300f).roundToInt().toFloat()
         bulletSpeed = (screenHeight / 240f).roundToInt().toFloat()
         bombSpeed = (screenHeight / 260f).roundToInt().toFloat()
-        bombCounter = floor(Math.random() * 10).toInt()
+        bombCounter = (5..10).random()
+
+        scoreGame.text = "Score: $score\nBomb Counter: $bombCounter"
 
         playerShip = ImageView(this)
         playerShip.setImageResource(R.drawable.shipplayer)
@@ -120,16 +121,16 @@ class GameActivity : AppCompatActivity() {
             newShip.layoutParams = LinearLayout.LayoutParams(100, 200)
             var newX = 0f
             while (true) {
-                newX = floor((Math.random() * 10) * screenWidth / 10 - newShip.width / 2).toFloat()
+                newX = (0..screenWidth).random().toFloat()
                 if (newX + newShip.width < screenWidth) {
                     break
                 }
             }
-            val newY = floor(-(Math.random() * 1000 + newShip.height)).toFloat()
+            val newY = (-1000..-200).random().toFloat()
             newShip.x = newX
             newShip.y = newY
             val downTimer = 0f
-            val shootTimer = floor(Math.random() * 100).toFloat()
+            val shootTimer = (10..100).random().toFloat()
             val list = mutableListOf<Float>()
             list.add(newX)
             list.add(newY)
@@ -213,8 +214,13 @@ class GameActivity : AppCompatActivity() {
             if (pos[2] == 0f) {
                 pos[1] += enemyShipSpeed
                 if (pos[1] > screenHeight) {
-                    pos[0] = floor((Math.random() * 10) * screenWidth / 10 + ship.width).toFloat()
-                    pos[1] = floor(-(Math.random() * 1000 + ship.height)).toFloat()
+                    while (true) {
+                        pos[0] = (0..screenWidth).random().toFloat()
+                        if (pos[0] + ship.width < screenWidth) {
+                            break
+                        }
+                    }
+                    pos[1] = (-1000..-200).random().toFloat()
                     pos[2] = 20f
                 }
                 ship.x = pos[0]
@@ -373,14 +379,19 @@ class GameActivity : AppCompatActivity() {
                                 image.x = stat[0]
                                 image.y = stat[1]
 
-                                bombCounter = floor(Math.random() * 10).toInt()
+                                bombCounter = (5..20).random()
                                 break
                             }
                         }
                     }
 
-                    posS[0] = floor((Math.random() * 10) * screenWidth / 10 + ship.width).toFloat()
-                    posS[1] = floor(-(Math.random() * 1000 + ship.height)).toFloat()
+                    while (true) {
+                        posS[0] = (0..screenWidth).random().toFloat()
+                        if (posS[0] + ship.width < screenWidth) {
+                            break
+                        }
+                    }
+                    posS[1] = (-1000..-200).random().toFloat()
                     posS[2] = 20f
                     ship.x = posS[0]
                     ship.y = posS[1]
@@ -388,7 +399,7 @@ class GameActivity : AppCompatActivity() {
                     collided = true
                     if (!deathState && !gameOverState) {
                         score++
-                        scoreGame.text = "Score: " + score
+                        scoreGame.text = "Score: $score\nBomb Counter: $bombCounter"
                     }
                     break
                 }
@@ -455,15 +466,20 @@ class GameActivity : AppCompatActivity() {
                                 break
                             }
                         }
-                        posS[0] = floor((Math.random() * 10) * screenWidth / 10 + ship.width).toFloat()
-                        posS[1] = floor(-(Math.random() * 1000 + ship.height)).toFloat()
+                        while (true) {
+                            posS[0] = (0..screenWidth).random().toFloat()
+                            if (posS[0] + ship.width < screenWidth) {
+                                break
+                            }
+                        }
+                        posS[1] = (-1000..-200).random().toFloat() - ship.height
                         posS[2] = 20f
                         ship.x = posS[0]
                         ship.y = posS[1]
 
                         if (!deathState && !gameOverState) {
                             score++
-                            scoreGame.text = "Score: $score"
+                            scoreGame.text = "Score: $score\nBomb Counter: $bombCounter"
                         }
                     }
                 }
